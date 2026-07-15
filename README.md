@@ -14,7 +14,6 @@
 - 🍪 Cookies del navegador y servidor proxy opcionales.
 - 📊 Progreso, velocidad, tiempo restante y registro integrado.
 - 🔄 Actualización de `yt-dlp` desde la propia aplicación.
-- 🔓 Sin DRM ni activación.
 
 > 🪟 **Plataforma compatible:** Windows de 64 bits.
 
@@ -68,7 +67,6 @@ Desarrollado por [ZeroCool22](https://github.com/ZeroCool22).
 - 🍪 Optional browser cookies and proxy support.
 - 📊 Integrated progress, speed, remaining time and activity log.
 - 🔄 Built-in `yt-dlp` updates.
-- 🔓 No DRM or activation.
 
 > 🪟 **Supported platform:** 64-bit Windows.
 
