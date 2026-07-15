@@ -16,6 +16,8 @@
 - 🔄 Actualización de `yt-dlp` desde la propia aplicación.
 - 🔓 Sin DRM ni activación.
 
+> 🪟 **Plataforma compatible:** Windows de 64 bits.
+
 ## 🖼️ Capturas de pantalla
 
 <img width="980" height="690" alt="Interfaz principal de YT-DLP CyberDownloader" src="https://github.com/user-attachments/assets/aec3a684-45ca-4e15-a17d-16b0b6bd11f3" />
@@ -67,5 +69,7 @@ Desarrollado por [ZeroCool22](https://github.com/ZeroCool22).
 - 📊 Integrated progress, speed, remaining time and activity log.
 - 🔄 Built-in `yt-dlp` updates.
 - 🔓 No DRM or activation.
+
+> 🪟 **Supported platform:** 64-bit Windows.
 
 Run it from source using the commands above, then use the language button in the sidebar to switch the interface to English.
