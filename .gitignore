@@ -16,6 +16,7 @@ output/
 installer_output/
 *.exe
 *.spec
+*.iss
 
 # Portable third-party binaries (download separately)
 tools/
@@ -34,7 +35,6 @@ Thumbs.db
 generador_licencias.html
 descripcion_mercadolibre.txt
 debug_icon.txt
-installer.iss
 
 # Local development launcher
 lanzar.bat

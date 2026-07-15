@@ -40,8 +40,6 @@ Para combinar audio y video, convertir formatos y procesar subtítulos, instalá
 
 El proyecto puede empaquetarse con PyInstaller o Auto Py to Exe en modo **One Directory**. La carpeta `_internal` generada debe conservarse junto al ejecutable.
 
-El script [CYBERDOWNLOADER_v1.1.iss](CYBERDOWNLOADER_v1.1.iss) permite crear el instalador con Inno Setup después de generar el ejecutable.
-
 ## ⚖️ Licencias
 
 El código original de CyberDownloader se distribuye bajo la [licencia MIT](license.txt).
