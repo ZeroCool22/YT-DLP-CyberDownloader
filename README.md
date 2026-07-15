@@ -16,6 +16,12 @@ Una interfaz de escritorio moderna y bilingüe para `yt-dlp`, desarrollada en Py
 - Actualización de `yt-dlp` desde la propia aplicación.
 - Sin DRM ni activación.
 
+## Captura de pantalla
+
+<img width="980" height="690" alt="Screenshot_1" src="https://github.com/user-attachments/assets/aec3a684-45ca-4e15-a17d-16b0b6bd11f3" />
+<img width="983" height="694" alt="Screenshot_2" src="https://github.com/user-attachments/assets/5e1c15ba-1ff8-45d8-a44b-55aed2e9aeec" />
+
+
 ## Ejecutar desde el código fuente
 
 Requiere Python 3.10 o posterior.
