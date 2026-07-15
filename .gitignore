@@ -36,3 +36,5 @@ descripcion_mercadolibre.txt
 debug_icon.txt
 installer.iss
 
+# Local development launcher
+lanzar.bat
