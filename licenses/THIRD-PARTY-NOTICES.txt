@@ -1,0 +1,81 @@
+THIRD-PARTY SOFTWARE NOTICES
+Cyber Downloader
+
+Cyber Downloader includes third-party software distributed under
+licenses different from the MIT License that covers Cyber Downloader's
+original source code.
+
+============================================================
+1. FFmpeg and FFprobe
+============================================================
+
+Components:
+- ffmpeg.exe
+- ffprobe.exe
+
+Version:
+7.0.2-full_build-www.gyan.dev
+
+Copyright:
+Copyright (c) 2000-2024 the FFmpeg developers
+
+Project website:
+https://ffmpeg.org/
+
+Windows build provider:
+https://www.gyan.dev/ffmpeg/builds/
+
+Build release:
+https://github.com/GyanD/codexffmpeg/releases/tag/7.0.2
+
+Upstream source reference:
+https://github.com/FFmpeg/FFmpeg/commit/e3a61e9103
+
+License:
+GNU General Public License, version 3 or, at your option,
+any later version (GPLv3+).
+
+The complete GPLv3 license text is installed at:
+licenses\FFmpeg-GPLv3.txt
+
+FFmpeg and FFprobe are separate third-party components and are not
+covered by Cyber Downloader's MIT License.
+
+FFmpeg and FFprobe are provided without warranty, as described in
+the GNU General Public License.
+
+============================================================
+2. yt-dlp
+============================================================
+
+Project:
+yt-dlp
+
+Website and source code:
+https://github.com/yt-dlp/yt-dlp
+
+License:
+The Unlicense. yt-dlp also contains components distributed under
+the MIT and ISC licenses.
+
+yt-dlp is third-party software and is not covered by Cyber
+Downloader's MIT License.
+
+============================================================
+3. CustomTkinter
+============================================================
+
+Project:
+CustomTkinter
+
+Website and source code:
+https://github.com/TomSchimansky/CustomTkinter
+
+License:
+MIT License
+
+Copyright:
+Copyright (c) Tom Schimansky
+
+CustomTkinter is third-party software. Its own copyright and license
+notices remain applicable.

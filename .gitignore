@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Build and installer outputs
+build/
+dist/
+output/
+installer_output/
+*.exe
+*.spec
+
+# Portable third-party binaries (download separately)
+tools/
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local Codex metadata
+.agents/
+.codex/
+
+# Obsolete private/commercial artifacts
+generador_licencias.html
+descripcion_mercadolibre.txt
+debug_icon.txt
+installer.iss
+
