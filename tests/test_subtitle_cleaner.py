@@ -52,7 +52,7 @@ class SubtitleCleanerTests(unittest.TestCase):
         self.assertEqual(removed, 0)
 
     def test_clean_vtt_then_convert_to_srt(self):
-        tools_dir = os.path.join(os.path.dirname(__file__), 'tools')
+        tools_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'tools')
         with tempfile.TemporaryDirectory() as temp_dir:
             vtt_path = os.path.join(temp_dir, 'sample.es.vtt')
             srt_path = os.path.join(temp_dir, 'sample.es.srt')
