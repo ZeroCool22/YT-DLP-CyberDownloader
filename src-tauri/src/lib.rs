@@ -59,7 +59,7 @@ struct FinishedEvent {
     success: bool,
     cancelled: bool,
     message: String,
-    rate_limited: bool,
+    cookie_help_recommended: bool,
 }
 
 #[derive(Serialize)]
@@ -458,9 +458,12 @@ fn default_download_dir() -> String {
         .into_owned()
 }
 
-fn is_rate_limit_error(line: &str) -> bool {
+fn recommends_cookie_help(line: &str) -> bool {
     let normalized = line.to_ascii_lowercase();
-    normalized.contains("http error 429") || normalized.contains("too many requests")
+    normalized.contains("http error 429")
+        || normalized.contains("too many requests")
+        || normalized.contains("http error 403")
+        || normalized.contains("403: forbidden")
 }
 
 #[tauri::command]
@@ -595,14 +598,14 @@ fn start_download(
     *active = Some(child);
     drop(active);
 
-    let rate_limited = Arc::new(AtomicBool::new(false));
-    let stdout_rate_limited = Arc::clone(&rate_limited);
+    let cookie_help_recommended = Arc::new(AtomicBool::new(false));
+    let stdout_cookie_help = Arc::clone(&cookie_help_recommended);
     let stdout_app = app.clone();
     let stdout_thread = thread::spawn(move || {
         if let Some(stream) = stdout {
             for_each_output_line(stream, |line| {
-                if is_rate_limit_error(&line) {
-                    stdout_rate_limited.store(true, Ordering::SeqCst);
+                if recommends_cookie_help(&line) {
+                    stdout_cookie_help.store(true, Ordering::SeqCst);
                 }
                 if let Some(progress) = progress_from_line(&line) {
                     let _ = stdout_app.emit("download-progress", progress);
@@ -612,14 +615,14 @@ fn start_download(
             });
         }
     });
-    let stderr_rate_limited = Arc::clone(&rate_limited);
+    let stderr_cookie_help = Arc::clone(&cookie_help_recommended);
     let stderr_app = app.clone();
     let stderr_thread = thread::spawn(move || {
         if let Some(stream) = stderr {
             for_each_output_line(stream, |line| {
                 if !line.trim().is_empty() {
-                    if is_rate_limit_error(&line) {
-                        stderr_rate_limited.store(true, Ordering::SeqCst);
+                    if recommends_cookie_help(&line) {
+                        stderr_cookie_help.store(true, Ordering::SeqCst);
                     }
                     emit_log(&stderr_app, format!("[YT-DLP] {line}"));
                 }
@@ -646,7 +649,7 @@ fn start_download(
         let _ = stdout_thread.join();
         let _ = stderr_thread.join();
         let cancelled = app.state::<ProcessState>().cancelled.load(Ordering::SeqCst);
-        let rate_limited = rate_limited.load(Ordering::SeqCst);
+        let cookie_help_recommended = cookie_help_recommended.load(Ordering::SeqCst);
         let success = status.success() && !cancelled;
         if success {
             postprocess_subtitles(&app, &request, &snapshot);
@@ -672,7 +675,7 @@ fn start_download(
                 success,
                 cancelled,
                 message,
-                rate_limited,
+                cookie_help_recommended,
             },
         );
     });
@@ -769,7 +772,7 @@ pub fn run() {
 
 #[cfg(test)]
 mod tests {
-    use super::{build_arguments, for_each_output_line, is_rate_limit_error, DownloadRequest};
+    use super::{build_arguments, for_each_output_line, recommends_cookie_help, DownloadRequest};
     use std::path::Path;
 
     fn video_request() -> DownloadRequest {
@@ -789,10 +792,12 @@ mod tests {
     }
 
     #[test]
-    fn recognizes_youtube_rate_limit_errors() {
-        assert!(is_rate_limit_error("HTTP Error 429: Too Many Requests"));
-        assert!(is_rate_limit_error("ERROR: TOO MANY REQUESTS"));
-        assert!(!is_rate_limit_error("HTTP Error 404: Not Found"));
+    fn recognizes_errors_that_may_be_solved_with_cookies() {
+        assert!(recommends_cookie_help("HTTP Error 429: Too Many Requests"));
+        assert!(recommends_cookie_help("ERROR: TOO MANY REQUESTS"));
+        assert!(recommends_cookie_help("HTTP Error 403: Forbidden"));
+        assert!(recommends_cookie_help("403: FORBIDDEN"));
+        assert!(!recommends_cookie_help("HTTP Error 404: Not Found"));
     }
 
     #[test]

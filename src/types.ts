@@ -29,7 +29,7 @@ export interface FinishedEvent {
   success: boolean;
   cancelled: boolean;
   message: string;
-  rateLimited: boolean;
+  cookieHelpRecommended: boolean;
 }
 
 export interface EngineInfo {
