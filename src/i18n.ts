@@ -1,5 +1,17 @@
 import type { Language } from "./types";
 
+export function storageLocationLabel(path: string, language: Language): string {
+  const drive = /^([a-z]):(?:[\\/]|$)/i.exec(path.trim());
+  if (drive) {
+    const letter = drive[1].toUpperCase();
+    return language === "es" ? `LOCAL · UNIDAD ${letter}:` : `LOCAL · DRIVE ${letter}:`;
+  }
+  if (/^(?:\\\\|\/\/)/.test(path.trim())) {
+    return language === "es" ? "RED · UBICACIÓN COMPARTIDA" : "NETWORK · SHARED LOCATION";
+  }
+  return language === "es" ? "UBICACIÓN LOCAL" : "LOCAL LOCATION";
+}
+
 export const copy = {
   es: {
     downloads: "Descargas", settings: "Ajustes avanzados", active: "Activo", missing: "No encontrado",

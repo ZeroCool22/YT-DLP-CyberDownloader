@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { open } from "@tauri-apps/plugin-dialog";
-import { copy } from "./i18n";
+import { copy, storageLocationLabel } from "./i18n";
 import { DownloadIcon, FolderIcon, GlobeIcon, PasteIcon, RefreshIcon, SettingsIcon, StopIcon } from "./icons";
 import type {
   Browser,
@@ -231,7 +231,7 @@ export default function App() {
               <section className="card destination-card"><h2>📁 {t.destination}</h2>
                 <div className="path-box" title={destination}>{destination || "—"}</div>
                 <button className="secondary full" onClick={() => void chooseFolder()} disabled={running}><FolderIcon className="button-icon" />{t.browse}</button>
-                <div className="disk-hint"><span>●</span> LOCAL · DISK D PREFERRED</div>
+                <div className="disk-hint"><span>●</span> {storageLocationLabel(destination, language)}</div>
               </section>
             </div>
 
