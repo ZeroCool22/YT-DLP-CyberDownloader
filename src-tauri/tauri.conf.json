@@ -31,8 +31,7 @@
     "resources": {
       "../tools/yt-dlp.exe": "tools/yt-dlp.exe",
       "../tools/ffmpeg.exe": "tools/ffmpeg.exe",
-      "../tools/ffprobe.exe": "tools/ffprobe.exe",
-      "../tools/SHA2-256SUMS": "tools/SHA2-256SUMS"
+      "../tools/ffprobe.exe": "tools/ffprobe.exe"
     }
   }
 }
