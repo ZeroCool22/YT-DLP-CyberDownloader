@@ -9,7 +9,7 @@ use std::{
     process::{Child, Command, Stdio},
     sync::{
         atomic::{AtomicBool, Ordering},
-        Mutex,
+        Arc, Mutex,
     },
     thread,
     time::{Duration, SystemTime},
@@ -54,10 +54,12 @@ struct ProgressEvent {
 }
 
 #[derive(Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
 struct FinishedEvent {
     success: bool,
     cancelled: bool,
     message: String,
+    rate_limited: bool,
 }
 
 #[derive(Serialize)]
@@ -456,6 +458,11 @@ fn default_download_dir() -> String {
         .into_owned()
 }
 
+fn is_rate_limit_error(line: &str) -> bool {
+    let normalized = line.to_ascii_lowercase();
+    normalized.contains("http error 429") || normalized.contains("too many requests")
+}
+
 #[tauri::command]
 fn open_github() -> Result<(), String> {
     hidden_command(Path::new("explorer.exe"))
@@ -588,10 +595,15 @@ fn start_download(
     *active = Some(child);
     drop(active);
 
+    let rate_limited = Arc::new(AtomicBool::new(false));
+    let stdout_rate_limited = Arc::clone(&rate_limited);
     let stdout_app = app.clone();
     let stdout_thread = thread::spawn(move || {
         if let Some(stream) = stdout {
             for_each_output_line(stream, |line| {
+                if is_rate_limit_error(&line) {
+                    stdout_rate_limited.store(true, Ordering::SeqCst);
+                }
                 if let Some(progress) = progress_from_line(&line) {
                     let _ = stdout_app.emit("download-progress", progress);
                 } else if !line.trim().is_empty() {
@@ -600,11 +612,15 @@ fn start_download(
             });
         }
     });
+    let stderr_rate_limited = Arc::clone(&rate_limited);
     let stderr_app = app.clone();
     let stderr_thread = thread::spawn(move || {
         if let Some(stream) = stderr {
             for_each_output_line(stream, |line| {
                 if !line.trim().is_empty() {
+                    if is_rate_limit_error(&line) {
+                        stderr_rate_limited.store(true, Ordering::SeqCst);
+                    }
                     emit_log(&stderr_app, format!("[YT-DLP] {line}"));
                 }
             });
@@ -630,6 +646,7 @@ fn start_download(
         let _ = stdout_thread.join();
         let _ = stderr_thread.join();
         let cancelled = app.state::<ProcessState>().cancelled.load(Ordering::SeqCst);
+        let rate_limited = rate_limited.load(Ordering::SeqCst);
         let success = status.success() && !cancelled;
         if success {
             postprocess_subtitles(&app, &request, &snapshot);
@@ -655,6 +672,7 @@ fn start_download(
                 success,
                 cancelled,
                 message,
+                rate_limited,
             },
         );
     });
@@ -751,7 +769,7 @@ pub fn run() {
 
 #[cfg(test)]
 mod tests {
-    use super::{build_arguments, for_each_output_line, DownloadRequest};
+    use super::{build_arguments, for_each_output_line, is_rate_limit_error, DownloadRequest};
     use std::path::Path;
 
     fn video_request() -> DownloadRequest {
@@ -768,6 +786,13 @@ mod tests {
             subtitle_format: "vtt".into(),
             clean_subtitles: true,
         }
+    }
+
+    #[test]
+    fn recognizes_youtube_rate_limit_errors() {
+        assert!(is_rate_limit_error("HTTP Error 429: Too Many Requests"));
+        assert!(is_rate_limit_error("ERROR: TOO MANY REQUESTS"));
+        assert!(!is_rate_limit_error("HTTP Error 404: Not Found"));
     }
 
     #[test]

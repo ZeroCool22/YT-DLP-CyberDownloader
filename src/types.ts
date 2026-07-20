@@ -29,6 +29,7 @@ export interface FinishedEvent {
   success: boolean;
   cancelled: boolean;
   message: string;
+  rateLimited: boolean;
 }
 
 export interface EngineInfo {

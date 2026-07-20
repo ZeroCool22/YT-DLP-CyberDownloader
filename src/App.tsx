@@ -95,7 +95,10 @@ export default function App() {
           setProgress((current) => ({ ...current, percent: 100, speed: "0 B/s", eta: "00:00" }));
           setNotice({ title: activeCopy.info, message: activeCopy.success, kind: "info" });
         } else if (!payload.cancelled) {
-          setNotice({ title: activeCopy.error, message: payload.message, kind: "error" });
+          if (payload.rateLimited) {
+            appendLog(`[${languageRef.current === "es" ? "SISTEMA" : "SYSTEM"}] ${activeCopy.rateLimitHelp}`);
+          }
+          setNotice({ title: activeCopy.error, message: payload.rateLimited ? activeCopy.rateLimitHelp : payload.message, kind: "error" });
         }
       }),
       listen<boolean>("engine-update-finished", ({ payload }) => {
