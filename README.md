@@ -1,4 +1,4 @@
-# 🎬 YT-DLP CyberDownloader — Tauri Edition
+# 🎬 YT-DLP CyberDownloader
 
 > 🚀 Aplicación de escritorio bilingüe, rápida y completamente local para
 > descargar video, audio y subtítulos con **yt-dlp**.
