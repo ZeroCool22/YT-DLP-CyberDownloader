@@ -7,6 +7,10 @@ CyberDownloader v2 fue reconstruido con **Tauri 2, React, TypeScript y Rust**,
 manteniendo las funciones de la aplicación original y reduciendo el consumo de
 recursos.
 
+<img width="1042" height="753" alt="Screenshot_1" src="https://github.com/user-attachments/assets/76197038-66ea-4be6-9e06-007a566555ab" />
+
+<img width="1042" height="751" alt="Screenshot_2" src="https://github.com/user-attachments/assets/56fe1f22-5c8b-4c64-9fb7-98f07b8d7471" />
+
 ## ✨ Características
 
 - 📥 Descargas desde YouTube, Instagram, Twitch, TikTok y demás sitios compatibles.
