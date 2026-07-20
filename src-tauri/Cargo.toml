@@ -1,0 +1,24 @@
+[package]
+name = "cyberdownloader"
+version = "2.0.0"
+description = "Local desktop frontend for yt-dlp"
+authors = ["CyberDownloader"]
+edition = "2021"
+
+[lib]
+name = "cyberdownloader_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+html-escape = "0.2"
+regex = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tauri = { version = "2", features = [] }
+tauri-plugin-dialog = "2"
+
+[dev-dependencies]
+pretty_assertions = "1"

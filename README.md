@@ -1,71 +1,66 @@
-# 🎬 YT-DLP CyberDownloader
+# 🎬 YT-DLP CyberDownloader — Tauri Edition
 
-🚀 Una interfaz de escritorio moderna y bilingüe para `yt-dlp`, desarrollada en Python con CustomTkinter.
-
-![CyberDownloader](assests/youtube.png)
+Aplicación de escritorio bilingüe para descargar video, audio y subtítulos con
+yt-dlp. Esta versión 2 fue reconstruida con **Tauri 2, React, TypeScript y Rust**.
 
 ## ✨ Características
 
-- 🌐 Interfaz en español e inglés con cambio instantáneo.
-- 📥 Descargas desde YouTube, Instagram, Twitch, TikTok y otros sitios compatibles con `yt-dlp`.
-- 🎞️ Selección de calidad: mejor disponible, 1080p, 720p o audio MP3.
-- 💬 Descarga y conversión de subtítulos VTT/SRT.
-- 🧹 Limpieza opcional de repeticiones en subtítulos automáticos.
-- 🍪 Cookies del navegador y servidor proxy opcionales.
-- 📊 Progreso, velocidad, tiempo restante y registro integrado.
-- 🔄 Actualización de `yt-dlp` desde la propia aplicación.
+- Descargas desde YouTube, Instagram, Twitch, TikTok y demás sitios compatibles.
+- Mejor calidad disponible, video hasta 1080p/720p o audio MP3 a 320 kbps.
+- Progreso, velocidad, tiempo restante, cancelación y terminal coloreada.
+- Subtítulos manuales o automáticos en VTT/SRT con limpieza de repeticiones.
+- Cookies de Brave, Chrome, Chromium, Edge, Firefox, Opera, Vivaldi o Whale.
+- Selección opcional de perfil del navegador y proxy.
+- Interfaz instantánea en español e inglés.
+- Actualización integrada del motor yt-dlp.
+- Binarios portables de yt-dlp, FFmpeg y FFprobe en el instalador.
 
-> 🪟 **Plataforma compatible:** Windows de 64 bits.
+> 🪟 Plataforma compatible: Windows de 64 bits.
 
-## 🖼️ Capturas de pantalla
+## Requisitos locales
 
-<img width="980" height="690" alt="Interfaz principal de YT-DLP CyberDownloader" src="https://github.com/user-attachments/assets/aec3a684-45ca-4e15-a17d-16b0b6bd11f3" />
+- Node 22 o superior y pnpm 11 (Node se usa también para resolver los desafíos
+  JavaScript/EJS de YouTube)
+- Rust/Cargo con target MSVC
+- Visual Studio Build Tools y WebView2
+- `tools/yt-dlp.exe`, `tools/ffmpeg.exe` y `tools/ffprobe.exe`
 
-<img width="983" height="694" alt="YT-DLP CyberDownloader en inglés" src="https://github.com/user-attachments/assets/5e1c15ba-1ff8-45d8-a44b-55aed2e9aeec" />
+Las herramientas `.exe` no se versionan. Las dependencias pnpm usan el store
+`D:\.pnpm-store\v11` y los artefactos de Cargo quedan en `target` dentro de este
+disco.
 
-## 🐍 Ejecutar desde el código fuente
-
-Requiere Python 3.10 o posterior.
+## 🛠️ Desarrollo
 
 ```powershell
-python -m venv venv
-.\venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
-python main.py
+pnpm install
+pnpm tauri dev
 ```
 
-Para combinar audio y video, convertir formatos y procesar subtítulos, instalá FFmpeg y FFprobe en el `PATH` o colocá ambos ejecutables dentro de una carpeta `tools` en la raíz del proyecto.
+## ✅ Verificación y compilación
 
-## 📦 Crear el ejecutable
+```powershell
+pnpm check
+pnpm tauri build --no-bundle
+```
 
-El proyecto puede empaquetarse con PyInstaller o Auto Py to Exe en modo **One Directory**. La carpeta `_internal` generada debe conservarse junto al ejecutable.
+Para generar el instalador NSIS:
 
-## ⚖️ Licencias
+```powershell
+pnpm tauri build --config '{"bundle":{"active":true}}' --bundles nsis
+```
 
-El código original de CyberDownloader se distribuye bajo la [licencia MIT](license.txt).
+Los ejecutables pesados de `tools/` no se versionan. Se incluyen como recursos
+al compilar localmente y el instalador generado se publica mediante GitHub
+Releases, no dentro del historial Git.
 
-FFmpeg, FFprobe, yt-dlp, CustomTkinter y las demás dependencias conservan sus respectivas licencias. Consultá [THIRD-PARTY-NOTICES.txt](licenses/THIRD-PARTY-NOTICES.txt) y [FFmpeg-GPLv3.txt](licenses/FFmpeg-GPLv3.txt).
+Consultá [MIGRATION_PLAN.md](MIGRATION_PLAN.md) para el inventario funcional y
+las decisiones de migración.
 
 ## 👤 Autor
 
 Desarrollado por [ZeroCool22](https://github.com/ZeroCool22).
 
----
+## ⚖️ Licencia
 
-## 🇺🇸 English
-
-🚀 YT-DLP CyberDownloader is a modern bilingual desktop GUI for `yt-dlp`, built with Python and CustomTkinter.
-
-### ✨ Features
-
-- 🌐 Instant Spanish and English interface switching.
-- 📥 Video and audio downloads from sites supported by `yt-dlp`.
-- 🎞️ Quality selection up to 1080p and MP3 audio conversion.
-- 💬 VTT/SRT subtitle downloading and conversion.
-- 🍪 Optional browser cookies and proxy support.
-- 📊 Integrated progress, speed, remaining time and activity log.
-- 🔄 Built-in `yt-dlp` updates.
-
-> 🪟 **Supported platform:** 64-bit Windows.
-
-Run it from source using the commands above, then use the language button in the sidebar to switch the interface to English.
+Distribuido bajo licencia MIT. yt-dlp, FFmpeg y el resto de las dependencias
+conservan sus respectivas licencias.
