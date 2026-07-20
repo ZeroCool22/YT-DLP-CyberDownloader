@@ -1,40 +1,13 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-.pytest_cache/
-
-# Virtual environments
-venv/
-.venv/
-env/
-
-# Build and installer outputs
-build/
+node_modules/
 dist/
-output/
-installer_output/
-*.exe
-*.spec
-*.iss
-
-# Portable third-party binaries (download separately)
-tools/
-
-# IDE and OS files
-.vscode/
-.idea/
+target/
+src-tauri/target/
+src-tauri/gen/schemas/
+.pnpm-store/
+tools/*.exe
+*.log
 .DS_Store
 Thumbs.db
-
-# Local Codex metadata
-.agents/
-.codex/
-
-# Obsolete private/commercial artifacts
-generador_licencias.html
-descripcion_mercadolibre.txt
-debug_icon.txt
-
-# Local development launcher
-lanzar.bat
+.idea/
+.vscode/
+!.vscode/extensions.json

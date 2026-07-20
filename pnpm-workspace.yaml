@@ -1,0 +1,7 @@
+packages:
+  - "."
+
+storeDir: "D:/.pnpm-store"
+
+allowBuilds:
+  esbuild: true
