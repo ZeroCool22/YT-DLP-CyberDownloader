@@ -62,6 +62,15 @@ struct FinishedEvent {
     cookie_help_recommended: bool,
 }
 
+#[derive(Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+struct EngineUpdateFinishedEvent {
+    success: bool,
+    updated: Option<bool>,
+    previous_version: Option<String>,
+    version: Option<String>,
+}
+
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 struct EngineInfo {
@@ -206,6 +215,30 @@ fn locate_ytdlp(app: &AppHandle) -> Option<PathBuf> {
 
 fn locate_ffmpeg(app: &AppHandle) -> Option<PathBuf> {
     locate_tool(app, &["ffmpeg.exe", "ffmpeg"], "-version")
+}
+
+fn executable_version(path: &Path) -> Option<String> {
+    hidden_command(path)
+        .arg("--version")
+        .output()
+        .ok()
+        .filter(|output| output.status.success())
+        .map(|output| String::from_utf8_lossy(&output.stdout).trim().to_owned())
+        .filter(|version| !version.is_empty())
+}
+
+fn update_changed(
+    success: bool,
+    previous_version: Option<&str>,
+    version: Option<&str>,
+) -> Option<bool> {
+    if !success {
+        return None;
+    }
+    match (previous_version, version) {
+        (Some(before), Some(after)) => Some(before != after),
+        _ => None,
+    }
 }
 
 fn node_is_supported(path: &Path) -> bool {
@@ -479,11 +512,7 @@ fn open_github() -> Result<(), String> {
 fn engine_info(app: AppHandle) -> EngineInfo {
     let engine = locate_ytdlp(&app);
     let node = locate_node(&app);
-    let version = engine
-        .as_ref()
-        .and_then(|path| hidden_command(path).arg("--version").output().ok())
-        .filter(|output| output.status.success())
-        .map(|output| String::from_utf8_lossy(&output.stdout).trim().to_owned());
+    let version = engine.as_deref().and_then(executable_version);
     EngineInfo {
         available: engine.is_some(),
         executable: engine
@@ -697,6 +726,7 @@ fn cancel_download(app: AppHandle, state: State<ProcessState>) -> Result<(), Str
 #[tauri::command]
 fn update_ytdlp(app: AppHandle, state: State<ProcessState>) -> Result<(), String> {
     let engine = locate_ytdlp(&app).ok_or("No se encontró yt-dlp.")?;
+    let previous_version = executable_version(&engine);
     let mut slot = state
         .child
         .lock()
@@ -739,7 +769,17 @@ fn update_ytdlp(app: AppHandle, state: State<ProcessState>) -> Result<(), String
             *child = None;
         }
         let success = status.is_some_and(|status| status.success());
-        let _ = app.emit("engine-update-finished", success);
+        let version = executable_version(&engine);
+        let updated = update_changed(success, previous_version.as_deref(), version.as_deref());
+        let _ = app.emit(
+            "engine-update-finished",
+            EngineUpdateFinishedEvent {
+                success,
+                updated,
+                previous_version,
+                version,
+            },
+        );
     });
     Ok(())
 }
@@ -772,7 +812,10 @@ pub fn run() {
 
 #[cfg(test)]
 mod tests {
-    use super::{build_arguments, for_each_output_line, recommends_cookie_help, DownloadRequest};
+    use super::{
+        build_arguments, for_each_output_line, recommends_cookie_help, update_changed,
+        DownloadRequest,
+    };
     use std::path::Path;
 
     fn video_request() -> DownloadRequest {
@@ -798,6 +841,23 @@ mod tests {
         assert!(recommends_cookie_help("HTTP Error 403: Forbidden"));
         assert!(recommends_cookie_help("403: FORBIDDEN"));
         assert!(!recommends_cookie_help("HTTP Error 404: Not Found"));
+    }
+
+    #[test]
+    fn distinguishes_updates_from_an_already_current_engine() {
+        assert_eq!(
+            update_changed(true, Some("2026.07.01"), Some("2026.07.20")),
+            Some(true)
+        );
+        assert_eq!(
+            update_changed(true, Some("2026.07.20"), Some("2026.07.20")),
+            Some(false)
+        );
+        assert_eq!(
+            update_changed(false, Some("2026.07.20"), Some("2026.07.20")),
+            None
+        );
+        assert_eq!(update_changed(true, None, Some("2026.07.20")), None);
     }
 
     #[test]

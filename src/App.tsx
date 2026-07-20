@@ -9,6 +9,7 @@ import type {
   DownloadMode,
   DownloadRequest,
   EngineInfo,
+  EngineUpdateFinishedEvent,
   FinishedEvent,
   Language,
   ProgressEvent,
@@ -101,16 +102,25 @@ export default function App() {
           setNotice({ title: activeCopy.error, message: payload.cookieHelpRecommended ? activeCopy.cookieErrorHelp : payload.message, kind: "error" });
         }
       }),
-      listen<boolean>("engine-update-finished", ({ payload }) => {
+      listen<EngineUpdateFinishedEvent>("engine-update-finished", ({ payload }) => {
         const activeCopy = copy[languageRef.current];
         setUpdating(false);
         void refreshEngine();
+        const version = payload.version ?? activeCopy.unknownVersion;
+        const successMessage = payload.updated === true
+          ? `${activeCopy.updatedSuccessfully}\n${activeCopy.installedVersion}: ${version}`
+          : payload.updated === false
+            ? `${activeCopy.alreadyUpdated}\n${activeCopy.installedVersion}: ${version}`
+            : `${activeCopy.updateChecked}\n${activeCopy.installedVersion}: ${version}`;
+        if (payload.success) {
+          appendLog(`[${languageRef.current === "es" ? "SISTEMA" : "SYSTEM"}] ${successMessage.replace("\n", " · ")}`);
+        }
         setNotice({
-          title: payload ? activeCopy.info : activeCopy.error,
-          message: payload
-            ? languageRef.current === "es" ? "yt-dlp actualizado correctamente." : "yt-dlp was updated successfully."
+          title: payload.success ? activeCopy.info : activeCopy.error,
+          message: payload.success
+            ? successMessage
             : languageRef.current === "es" ? "No se pudo actualizar yt-dlp. Revisá los logs." : "yt-dlp could not be updated. Check the logs.",
-          kind: payload ? "info" : "error",
+          kind: payload.success ? "info" : "error",
         });
       }),
     ]);
@@ -258,7 +268,7 @@ export default function App() {
               <label className="field-label profile-field">{t.browserProfile}<input value={browserProfile} onChange={(e) => setBrowserProfile(e.target.value)} placeholder={t.browserProfileHint} disabled={!useCookies || running} /></label>
               <label className="field-label">{t.proxy}<input value={proxy} onChange={(e) => setProxy(e.target.value)} placeholder="http://127.0.0.1:8080" disabled={running} /></label>
             </section>
-            <section className="card maintenance-card"><div><h2>↻ {t.maintenance}</h2><p>{t.updateHelp}</p></div>
+            <section className="card maintenance-card"><div><h2>↻ {t.maintenance}</h2><p>{t.updateHelp}</p><div className="engine-version-label">{t.installedVersion}: <strong>{engine.version ?? t.unknownVersion}</strong></div></div>
               <button className="secondary" onClick={() => void updateEngine()} disabled={updating || running || !engine.available}><RefreshIcon className={`button-icon ${updating ? "spinning" : ""}`} />{updating ? t.updating : t.update}</button></section>
           </div>
         )}

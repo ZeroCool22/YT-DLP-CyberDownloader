@@ -40,3 +40,10 @@ export interface EngineInfo {
   jsRuntimeAvailable: boolean;
   jsRuntime: string | null;
 }
+
+export interface EngineUpdateFinishedEvent {
+  success: boolean;
+  updated: boolean | null;
+  previousVersion: string | null;
+  version: string | null;
+}
