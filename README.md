@@ -41,9 +41,9 @@ recursos.
 - 🛠️ Visual Studio Build Tools y WebView2.
 - 📁 `tools/yt-dlp.exe`, `tools/ffmpeg.exe` y `tools/ffprobe.exe`.
 
-Las herramientas `.exe` no se versionan. Las dependencias pnpm usan el store
-`D:\.pnpm-store\v11` y los artefactos de Cargo se generan dentro de `target` en
-este proyecto.
+Las herramientas `.exe` no se versionan. pnpm utiliza el store configurado en
+el sistema de cada desarrollador y los artefactos de Cargo se generan dentro de
+`target` en este proyecto.
 
 ## 🚀 Desarrollo
 

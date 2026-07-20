@@ -450,7 +450,7 @@ fn build_arguments(
 fn default_download_dir() -> String {
     std::env::var_os("USERPROFILE")
         .map(PathBuf::from)
-        .unwrap_or_else(|| PathBuf::from("D:\\"))
+        .unwrap_or_else(|| std::env::current_dir().unwrap_or_else(|_| PathBuf::from(".")))
         .join("Downloads")
         .to_string_lossy()
         .into_owned()
