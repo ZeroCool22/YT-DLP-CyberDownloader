@@ -29,7 +29,7 @@
 
 - 🦀 **Rust** para el backend, la gestión de procesos y las descargas.
 - ⚛️ **React + TypeScript** para la interfaz.
-- 🖥️ **Tauri 2 + WebView2** para la aplicación de escritorio.
+- 🖥️ **Tauri 2 + WebView2**.
 - 📦 **pnpm** para dependencias y scripts del frontend.
 - 🎞️ **yt-dlp + FFmpeg** para extracción, conversión y combinación multimedia.
 
