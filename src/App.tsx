@@ -230,7 +230,6 @@ export default function App() {
           <div className="engine-status-row"><span className={engine.available ? "status-dot" : "status-dot offline"} /><strong>{engine.available ? `${t.active}${engine.version ? ` · ${engine.version}` : ""}` : t.missing}</strong></div>
         </div>
         <button className="github-button" onClick={() => void openGithub()} title="github.com/ZeroCool22"><img src="/github.png" alt="" /> <span>By ZeroCool22</span></button>
-        <div className="version">TAURI EDITION · v2.0</div>
       </aside>
 
       <section className="workspace">
