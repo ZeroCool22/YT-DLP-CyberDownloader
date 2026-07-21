@@ -43,6 +43,14 @@ function ConsoleLine({ line }: { line: string }) {
   )}</>;
 }
 
+function isTextContextMenuTarget(target: EventTarget | null) {
+  if (!(target instanceof Element)) return false;
+  const editable = target.closest("input, textarea, [contenteditable='true']");
+  if (!editable) return false;
+  if (!(editable instanceof HTMLInputElement)) return true;
+  return ["text", "search", "url", "email", "tel", "password", "number"].includes(editable.type);
+}
+
 export default function App() {
   const [language, setLanguage] = useState<Language>("es");
   const [tab, setTab] = useState<Tab>("download");
@@ -81,6 +89,14 @@ export default function App() {
   useEffect(() => {
     languageRef.current = language;
   }, [language]);
+
+  useEffect(() => {
+    const restrictContextMenu = (event: MouseEvent) => {
+      if (!isTextContextMenuTarget(event.target)) event.preventDefault();
+    };
+    document.addEventListener("contextmenu", restrictContextMenu);
+    return () => document.removeEventListener("contextmenu", restrictContextMenu);
+  }, []);
 
   useEffect(() => {
     void invoke<string>("default_download_dir").then(setDestination).catch(() => undefined);
