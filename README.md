@@ -3,7 +3,7 @@
 > 🚀 Aplicación de escritorio bilingüe, rápida y completamente local para
 > descargar video, audio y subtítulos con **yt-dlp**.
 
-<img width="1039" height="753" alt="Screenshot_3" src="https://github.com/user-attachments/assets/ad557cb6-709a-4d61-8b71-95213c2d9d0a" />
+<img width="1042" height="752" alt="Screenshot_5" src="https://github.com/user-attachments/assets/aa9435c2-fc1b-4b0b-8591-025c16c9686b" />
 
 <img width="1041" height="752" alt="Screenshot_4" src="https://github.com/user-attachments/assets/37e849c9-a7ca-401e-b92e-1a50d42290e1" />
 
